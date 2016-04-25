@@ -51,7 +51,7 @@ public class AsytaskActivity extends Activity {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			if (result!=null) {
-				Log.d("yao", "onPostExecute接收到的"+result);
+				Log.d("yao", "onPostExecute鎵ц"+result);
 			}
 			
 		}

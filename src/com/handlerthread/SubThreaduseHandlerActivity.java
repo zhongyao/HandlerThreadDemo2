@@ -1,13 +1,10 @@
 package com.handlerthread;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class SubThreaduseHandlerActivity extends ActionBarActivity{
+public class SubThreaduseHandlerActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -17,7 +14,7 @@ public class SubThreaduseHandlerActivity extends ActionBarActivity{
 			
 			@Override
 			public void run() {
-				Log.d("yao", "Runnable¿ªÆôÏß³Ì·½Ê½");
+				Log.d("yao", "Runnableå¼€å¯çº¿ç¨‹æ–¹å¼");
 			}
 		}).start();
 		
@@ -25,31 +22,10 @@ public class SubThreaduseHandlerActivity extends ActionBarActivity{
 			@Override
 			public void run() {
 				super.run();
-				Log.d("yao", "thread¿ªÆôÏß³Ì·½Ê½");
+				Log.d("yao", "threadå¼€å¯çº¿ç¨‹æ–¹å¼");
 			}
 		}.start();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		/*new Thread(){
 			

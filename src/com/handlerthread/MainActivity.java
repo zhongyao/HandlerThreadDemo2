@@ -1,30 +1,34 @@
 package com.handlerthread;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener{
 
 	private TextView mTvServiceInfo;
 
 	private HandlerThread mCheckMsgThread;
-	private Handler mCheckMsgHandler;
+	private Handler mCheckMsgHandler = new Handler(){
+		
+	};
 	private boolean isUpdateInfo;
 	private static final int MSG_UPDATE_INFO = 0x110;
 
-	// ÓëUIÏß³Ì¹ÜÀíµÄhandler
+	// ä¸UIçº¿ç¨‹ç®¡ç†çš„handler
 	private Handler mHandler = new Handler();
 
-	private Button button,button1;
+	private Button button,button1,button2;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,26 +37,43 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 		mTvServiceInfo = (TextView) findViewById(R.id.textView);
 		button = (Button) findViewById(R.id.button);
 		button1 = (Button) findViewById(R.id.button1);
-				
+		button2  = (Button) findViewById(R.id.button2);
+		
 		button.setOnClickListener(this);
 		button1.setOnClickListener(this);
-		// ´´½¨ºóÌ¨Ïß³Ì
+		button2.setOnClickListener(this);
+		// åˆ›å»ºåå°çº¿ç¨‹
 		initBackThread();
+		
+//		new Thread(){
+//			public void run() {
+//				mCheckMsgHandler.sendEmptyMessage(1);
+//				
+//				mHandler.post(new Runnable() {
+//					public void run() {
+//						mTvServiceInfo.setText("æ”¶åˆ°");
+//					}
+//				});
+//			};
+//		}.start();
+		
+		
 
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// ¿ªÊ¼²éÑ¯
+		// å¼€å§‹æŸ¥è¯¢
 		isUpdateInfo = true;
+		Log.d("yao", "onResume");
 		mCheckMsgHandler.sendEmptyMessage(MSG_UPDATE_INFO);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// Í£Ö¹²éÑ¯
+		// åœæ­¢æŸ¥è¯¢
 		isUpdateInfo = false;
 		mCheckMsgHandler.removeMessages(MSG_UPDATE_INFO);
 
@@ -64,10 +85,14 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 		mCheckMsgHandler = new Handler(mCheckMsgThread.getLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
+				boolean b = Looper.getMainLooper()==Looper.myLooper();
+				Log.v("yao", String.valueOf(b));
+				Log.d("yao", "mCheckMsgHandler--handleMessage");
 				checkForUpdate();
 				if (isUpdateInfo) {
+					Log.d("yao", "mCheckMsgHandler--sendEmptyMessageDelayed");
 					mCheckMsgHandler.sendEmptyMessageDelayed(MSG_UPDATE_INFO,
-							3000);
+							1000);
 				}
 			}
 		};
@@ -75,16 +100,18 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 	}
 
 	/**
-	 * Ä£Äâ´Ó·şÎñÆ÷½âÎöÊı¾İ
+	 * æ¨¡æ‹Ÿä»æœåŠ¡å™¨è§£ææ•°æ®
 	 */
 	private void checkForUpdate() {
 		try {
-			// Ä£ÄâºÄÊ±
+			// æ¨¡æ‹Ÿè€—æ—¶
 			Thread.sleep(3000);
+			
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					String result = "ÊµÊ±¸üĞÂÖĞ£¬µ±Ç°´óÅÌÖ¸Êı£º<font color='red'>%d</font>";
+					Log.d("yao", "mHandler--post");
+					String result = "å®æ—¶æ›´æ–°ä¸­ï¼Œå½“å‰å¤§ç›˜æŒ‡æ•°ï¼š<font color='red'>%d</font>";
 					result = String.format(result,
 							(int) (Math.random() * 3000 + 1000));
 					mTvServiceInfo.setText(Html.fromHtml(result));
@@ -100,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// ÊÍ·Å×ÊÔ´
+		// é‡Šæ”¾èµ„æº
 		mCheckMsgThread.quit();
 	}
 
@@ -114,6 +141,10 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 		case R.id.button1:
 			Intent intent1 = new Intent(this,SubThreaduseHandlerActivity.class);
 			startActivity(intent1);
+			break;
+		case R.id.button2:
+			Intent intent2 = new Intent(this,MainThreadToSubThreadActivity.class);
+			startActivity(intent2);
 			break;
 		default:
 			break;
