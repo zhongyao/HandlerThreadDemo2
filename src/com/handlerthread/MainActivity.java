@@ -13,7 +13,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
+/**
+ * 参考blog：
+ * http://blog.csdn.net/feiduclear_up/article/details/46840523#comments
+ * http://blog.csdn.net/lmj623565791/article/details/47079737
+ * @author zhongyao
+ *
+ */
 public class MainActivity extends Activity implements OnClickListener{
 
 	private TextView mTvServiceInfo;
@@ -86,7 +92,7 @@ public class MainActivity extends Activity implements OnClickListener{
 			@Override
 			public void handleMessage(Message msg) {
 				boolean b = Looper.getMainLooper()==Looper.myLooper();
-				Log.v("yao", String.valueOf(b));
+				Log.v("yao", String.valueOf(b));//布尔值为false，可以得知这是在子线程中
 				Log.d("yao", "mCheckMsgHandler--handleMessage");
 				checkForUpdate();
 				if (isUpdateInfo) {
