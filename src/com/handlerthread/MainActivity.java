@@ -84,7 +84,12 @@ public class MainActivity extends Activity implements OnClickListener{
 		mCheckMsgHandler.removeMessages(MSG_UPDATE_INFO);
 
 	}
-
+	/*
+	 * 将HandlerThread中创建的looper传递给Handler。
+	 * 
+	 * 也就意味着该Handler收到Message后，程序在HandlerThread创建的线程中运行
+	 * 
+	 */
 	private void initBackThread() {
 		mCheckMsgThread = new HandlerThread("check-message-coming");
 		mCheckMsgThread.start();
@@ -97,8 +102,9 @@ public class MainActivity extends Activity implements OnClickListener{
 				checkForUpdate();
 				if (isUpdateInfo) {
 					Log.d("yao", "mCheckMsgHandler--sendEmptyMessageDelayed");
-					mCheckMsgHandler.sendEmptyMessageDelayed(MSG_UPDATE_INFO,
-							1000);
+//					mCheckMsgHandler.sendEmptyMessageDelayed(MSG_UPDATE_INFO,
+//							1000);
+					mCheckMsgHandler.sendEmptyMessage(MSG_UPDATE_INFO);
 				}
 			}
 		};
