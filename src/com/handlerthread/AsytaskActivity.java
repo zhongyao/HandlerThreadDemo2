@@ -77,7 +77,7 @@ public class AsytaskActivity extends Activity {
 //				Log.d("yao", time + "");// 请求时间183ms
 //				return BitmapFactory.decodeStream(is);
 				
-				//可知使用HttpUrlConnection请求明显较快与HttpClient
+				//可知使用HttpUrlConnection请求比HttpClient要快
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
