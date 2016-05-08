@@ -22,6 +22,7 @@ import android.widget.TextView;
  */
 public class MainActivity extends Activity implements OnClickListener{
 
+	public static String YAO = "yao";
 	private TextView mTvServiceInfo;
 
 	private HandlerThread mCheckMsgThread;

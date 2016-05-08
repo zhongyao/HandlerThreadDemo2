@@ -5,11 +5,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -24,7 +30,8 @@ public class AsytaskActivity extends Activity {
 	private ImageView iv;
 	private long timecurrentTimeMillis, timecurrentTimeMillis2;
 	private long time;
-
+	private String url = "http://g.hiphotos.baidu.com/image/pic/item/060828381f30e9244e3f894a49086e061d95f736.jpg"; 
+	final OkHttpClient client = new OkHttpClient();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,12 +39,57 @@ public class AsytaskActivity extends Activity {
 
 		initView();
 
-		new MyTask().execute();
+//		new MyTask().execute();
 	}
-
 	private void initView() {
 		iv = (ImageView) findViewById(R.id.iv);
 	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(MainActivity.YAO,"onResume");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void execute() throws Exception{
+       
+        Request request = new Request.Builder().url(url).build();
+
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+        	Log.d(MainActivity.YAO, "成功");
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+        
+//        client.newCall(request).enqueue(new Callback() {
+//
+//			@Override
+//			public void onFailure(Request arg0, IOException arg1) {
+//				
+//			}
+//
+//			@Override
+//			public void onResponse(Response response) throws IOException {
+//				if(response.isSuccessful()){
+//                    System.out.println(response.code());
+//                    Log.d(MainActivity.YAO, "成功");
+//                    System.out.println(response.body().string());
+//                }
+//							
+//			}
+//        });
+    }
 
 	private class MyTask extends AsyncTask<URL, Void, Bitmap> {
 
@@ -78,6 +130,8 @@ public class AsytaskActivity extends Activity {
 //				return BitmapFactory.decodeStream(is);
 				
 				//可知使用HttpUrlConnection请求比HttpClient要快
+				
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
