@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements OnClickListener{
 			@Override
 			public void handleMessage(Message msg) {
 				boolean b = Looper.getMainLooper()==Looper.myLooper();
-				Log.v("yao", String.valueOf(b));//布尔值为false，可以得知这是在子线程中
+				Log.v("yao", String.valueOf(b));//为false，可知在子线程中
 				Log.d("yao", "mCheckMsgHandler--handleMessage");
 				checkForUpdate();
 				if (isUpdateInfo) {
@@ -124,6 +124,7 @@ public class MainActivity extends Activity implements OnClickListener{
 				@Override
 				public void run() {
 					Log.d("yao", "mHandler--post");
+					Log.d("yao", (Looper.getMainLooper() == Looper.myLooper())+"");//为true：可知在UI线程中
 					String result = "实时更新中，当前大盘指数：<font color='red'>%d</font>";
 					result = String.format(result,
 							(int) (Math.random() * 3000 + 1000));
