@@ -13,9 +13,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
+/**
+ * 参考blog：
+ * http://blog.csdn.net/feiduclear_up/article/details/46840523#comments
+ * http://blog.csdn.net/lmj623565791/article/details/47079737
+ * @author zhongyao
+ *
+ */
 public class MainActivity extends Activity implements OnClickListener{
 
+	public static String YAO = "yao";
 	private TextView mTvServiceInfo;
 
 	private HandlerThread mCheckMsgThread;
@@ -78,7 +85,12 @@ public class MainActivity extends Activity implements OnClickListener{
 		mCheckMsgHandler.removeMessages(MSG_UPDATE_INFO);
 
 	}
-
+	/*
+	 * 将HandlerThread中创建的looper传递给Handler。
+	 * 
+	 * 也就意味着该Handler收到Message后，程序在HandlerThread创建的线程中运行
+	 * 
+	 */
 	private void initBackThread() {
 		mCheckMsgThread = new HandlerThread("check-message-coming");
 		mCheckMsgThread.start();
@@ -86,13 +98,14 @@ public class MainActivity extends Activity implements OnClickListener{
 			@Override
 			public void handleMessage(Message msg) {
 				boolean b = Looper.getMainLooper()==Looper.myLooper();
-				Log.v("yao", String.valueOf(b));
+				Log.v("yao", String.valueOf(b));//为false，可知在子线程中
 				Log.d("yao", "mCheckMsgHandler--handleMessage");
 				checkForUpdate();
 				if (isUpdateInfo) {
 					Log.d("yao", "mCheckMsgHandler--sendEmptyMessageDelayed");
-					mCheckMsgHandler.sendEmptyMessageDelayed(MSG_UPDATE_INFO,
-							1000);
+//					mCheckMsgHandler.sendEmptyMessageDelayed(MSG_UPDATE_INFO,
+//							1000);
+					mCheckMsgHandler.sendEmptyMessage(MSG_UPDATE_INFO);
 				}
 			}
 		};
@@ -111,6 +124,7 @@ public class MainActivity extends Activity implements OnClickListener{
 				@Override
 				public void run() {
 					Log.d("yao", "mHandler--post");
+					Log.d("yao", (Looper.getMainLooper() == Looper.myLooper())+"");//为true：可知在UI线程中
 					String result = "实时更新中，当前大盘指数：<font color='red'>%d</font>";
 					result = String.format(result,
 							(int) (Math.random() * 3000 + 1000));
